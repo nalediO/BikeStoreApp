@@ -53,9 +53,14 @@
       <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Rotativa, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rotativa.1.7.3\lib\net461\Rotativa.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -127,13 +132,78 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\customersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\productsController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\staffsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\brand.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\category.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\customer.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Model1.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Model1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Model1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\order.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\order_items.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\product.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ReportFileViewModel.cs" />
+    <Compile Include="Models\staff.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\stock.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\store.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Bikes_Images\Electra_Cruiser 1.jpeg" />
+    <Content Include="Bikes_Images\Electra_Cruiser.jpeg" />
+    <Content Include="Bikes_Images\Haro_Bikes1.jpeg" />
+    <Content Include="Bikes_Images\Haro_mountain_bike.jpeg" />
+    <Content Include="Bikes_Images\Heler_bike2.jpeg" />
+    <Content Include="Bikes_Images\Heller_bike1.jpeg" />
+    <Content Include="Bikes_Images\Pure_Cycles1.jpeg" />
+    <Content Include="Bikes_Images\Pure_Cycles2.jpeg" />
+    <Content Include="Bikes_Images\Ritchey_bike2.jpeg" />
+    <Content Include="Bikes_Images\Riychey_bike1.jpeg" />
+    <Content Include="Bikes_Images\Strider_balance_bike1.jpeg" />
+    <Content Include="Bikes_Images\Strider_sport_bike.jpeg" />
+    <Content Include="Bikes_Images\Sun_Bicycles1.jpeg" />
+    <Content Include="Bikes_Images\Sun_bicycles_retro.jpeg" />
+    <Content Include="Bikes_Images\Surly_bike.jpeg" />
+    <Content Include="Bikes_Images\default_bike.jpeg" />
+    <Content Include="Bikes_Images\Trek_Marlin_bike.jpeg" />
+    <Content Include="Bikes_Images\Trek_Xcaliber_bike.jpeg" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -153,12 +223,34 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Models\Model1.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\Model1.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.cs</LastGenOutput>
+    </Content>
+    <Content Include="Rotativa\help-wkhtmltoimage.txt" />
+    <Content Include="Rotativa\help-wkhtmltopdf.txt" />
+    <Content Include="Rotativa\wkhtmltoimage.exe" />
+    <Content Include="Rotativa\wkhtmltopdf.exe" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <EntityDeploy Include="Models\Model1.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Model1.edmx.diagram">
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Content>
+    <Content Include="App_Browsers\qt.browser" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -184,10 +276,32 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\staffs\Create.cshtml" />
+    <Content Include="Views\staffs\Delete.cshtml" />
+    <Content Include="Views\staffs\Details.cshtml" />
+    <Content Include="Views\staffs\Edit.cshtml" />
+    <Content Include="Views\staffs\Index.cshtml" />
+    <Content Include="Views\customers\Create.cshtml" />
+    <Content Include="Views\customers\Delete.cshtml" />
+    <Content Include="Views\customers\Details.cshtml" />
+    <Content Include="Views\customers\Edit.cshtml" />
+    <Content Include="Views\customers\Index.cshtml" />
+    <Content Include="Views\products\Create.cshtml" />
+    <Content Include="Views\products\Delete.cshtml" />
+    <Content Include="Views\products\Details.cshtml" />
+    <Content Include="Views\products\Edit.cshtml" />
+    <Content Include="Views\products\Index.cshtml" />
+    <Content Include="Views\Shared\_CreateStaffModal.cshtml" />
+    <Content Include="Views\Shared\_CreateCustomerModal.cshtml" />
+    <Content Include="Views\Home\Maintain.cshtml" />
+    <Content Include="Views\Shared\_EditStaffModal.cshtml" />
+    <Content Include="Views\Shared\_EditCustomerModal.cshtml" />
+    <Content Include="Views\Shared\_EditProductModal.cshtml" />
+    <Content Include="Views\Reports\Index.cshtml" />
+    <Content Include="Views\Reports\PdfTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
+    <Folder Include="App_Data\SavedReports\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -215,6 +329,9 @@
     <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Scripts\jquery-3.7.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.0.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

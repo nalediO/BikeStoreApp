@@ -1,0 +1,148 @@
+﻿@model IEnumerable<dynamic>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>BikeStores Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            color: #0066cc;
+            border-bottom: 3px solid #0066cc;
+            padding-bottom: 10px;
+        }
+
+        .report-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .report-info {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+
+        th {
+            background-color: #0066cc;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="report-header">
+        <h2>🚴 BikeStores Business Report</h2>
+        <h3>@ViewBag.ReportTitle</h3>
+    </div>
+
+    <div class="report-info">
+        <strong>Generated On:</strong> @DateTime.Now.ToString("dddd, MMMM dd, yyyy 'at' HH:mm:ss")<br />
+        <strong>Report Type:</strong> @ViewBag.ReportTitle
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        var firstItem = Model.FirstOrDefault();
+        if (firstItem != null)
+        {
+            var properties = firstItem.GetType().GetProperties();
+
+            <table>
+                <thead>
+                    <tr>
+                        @foreach (var prop in properties)
+                        {
+                            <th>@prop.Name</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model)
+                    {
+                        <tr>
+                            @foreach (var prop in properties)
+                            {
+                                var value = prop.GetValue(row, null);
+                                <td>
+                                    @if (value is decimal || value is double || value is float)
+                                    {
+                                        <text>R @string.Format("{0:N2}", value)</text>
+                                    }
+                                    else if (value is int)
+                                    {
+                                        @value.ToString()
+                                    }
+                                    else
+                                    {
+                                        @value
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    }
+    else
+    {
+        <div class="no-data">
+            <p> No data available for this report.</p>
+        </div>
+    }
+
+    <div class="footer">
+        <p><strong>BikeStores Management System</strong> | © @DateTime.Now.Year</p>
+        <p>This report is confidential and intended for internal use only.</p>
+    </div>
+</body>
+</html>

@@ -1,33 +1,232 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Home - BikeStores";
+    int pageSize = (int)ViewBag.PageSize;
+    string selBrand = ViewBag.SelectedBrand as string;
+    string selCategory = ViewBag.SelectedCategory as string;
+
+    var db = new BikeStoreApp.Models.BikeStoresEntities();
+    ViewBag.store_id = new SelectList(db.stores.ToList(), "store_id", "store_name");
+    ViewBag.manager_id = new SelectList(db.staffs.ToList(), "staff_id", "first_name");
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
+<div class="text-center mb-5">
+    <h2 class="display-6 fw-bold">🚲 Welcome to BikeStores</h2>
+    <p class="lead">Manage your staff, customers, and bicycles efficiently — all in one place.</p>
+</div>
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
+<div class="container-fluid">
+
+  
+    <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h4 class="text-primary mb-0">Staff</h4>
+            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createStaffModal">+ Add Staff</button>
+        </div>
+
+        <div class="row">
+            @foreach (var s in ViewBag.Staffs as List<BikeStoreApp.Models.staff> ?? ViewBag.Staffs)
+            {
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">@s.first_name @s.last_name</h5>
+                            <p class="text-muted mb-1"><strong>Email:</strong> @s.email</p>
+                            <p class="text-muted mb-0"><strong>Phone:</strong> @s.phone</p>
+
+                            <p class="text-muted mb-0"><strong>Products Sold:</strong></p>
+                            <ul style="list-style-type:none; padding-left:0; margin-bottom:0; font-size:0.85em;">
+                                
+                                    @{
+                                        var soldProducts = new HashSet<string>();
+                                        foreach (var o in s.orders)
+                                        {
+                                            foreach (var item in o.order_items)
+                                            {
+                                                soldProducts.Add(item.product.product_name);
+                                                if (soldProducts.Count >= 5)
+                                                {
+                                                    break;
+                                                }
+                                            }
+                                            if (soldProducts.Count >= 5)
+                                            {
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    @foreach (var name in soldProducts)
+                                    {
+                                        <li>@name</li>
+                                    }
+                                    @if (soldProducts.Count >= 5)
+                                    {
+                                        <li>...and more</li>
+                                    }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    
+        @{
+            int staffPage = (int)ViewBag.StaffPage;
+            int staffTotal = (int)ViewBag.StaffTotal;
+            int staffPages = (int)Math.Ceiling((double)staffTotal / pageSize);
+        }
+        <div class="d-flex justify-content-between mb-4">
+            <div>Showing page @staffPage of @staffPages</div>
+            <div>
+                <a class="btn btn-outline-secondary btn-sm @(staffPage <= 1 ? "disabled" : "")"
+                   href="@Url.Action("Index", new { brand = selBrand, category = selCategory, staffPage = staffPage - 1, customerPage = ViewBag.CustomerPage, productPage = ViewBag.ProductPage })">Prev</a>
+                <a class="btn btn-outline-secondary btn-sm @(staffPage >= staffPages ? "disabled" : "")"
+                   href="@Url.Action("Index", new { brand = selBrand, category = selCategory, staffPage = staffPage + 1, customerPage = ViewBag.CustomerPage, productPage = ViewBag.ProductPage })">Next</a>
+            </div>
+        </div>
     </div>
-</main>
+
+    <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h4 class="text-success mb-0"> Customers</h4>
+            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createCustomerModal">+ Add Customer</button>
+        </div>
+
+        <div class="row">
+            @foreach (var c in ViewBag.Customers as List<BikeStoreApp.Models.customer> ?? ViewBag.Customers)
+            {
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">@c.first_name @c.last_name</h5>
+                            <p class="text-muted mb-1"><strong>Email:</strong> @c.email</p>
+                            <p class="text-muted mb-0"><strong>Phone:</strong> @c.phone</p>
+                            <p class="text-muted mb-0"><strong>Address:</strong> @c.street, @c.city, @c.state</p>
+                            <p class="text-muted mb-0"><strong>Postal Code:</strong> @c.zip_code</p>
+
+                            <p class="text-muted mb-0"><strong>Products Bought:</strong></p>
+                            <ul style="list-style-type:none; padding-left:0; margin-bottom:0; font-size:0.85em;">
+                                @{
+                                    var boughtProducts = new HashSet<string>();
+                                    foreach (var o in c.orders)
+                                    {
+                                        foreach (var item in o.order_items)
+                                        {
+                                            boughtProducts.Add(item.product.product_name);
+                                            if (boughtProducts.Count >= 5)
+                                            {
+                                                break;
+                                            }
+                                        }
+                                        if (boughtProducts.Count >= 5)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                }
+                                @foreach (var name in boughtProducts)
+                                {
+                                    <li>@name</li>
+                                }
+                                @if (boughtProducts.Count >= 5)
+                                {
+                                    <li>...and more</li>
+                                }
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @{
+            int customerPage = (int)ViewBag.CustomerPage;
+            int customerTotal = (int)ViewBag.CustomerTotal;
+            int customerPages = (int)Math.Ceiling((double)customerTotal / pageSize);
+        }
+        <div class="d-flex justify-content-between mb-4">
+            <div>Showing page @customerPage of @customerPages</div>
+            <div>
+                <a class="btn btn-outline-secondary btn-sm @(customerPage <= 1 ? "disabled" : "")"
+                   href="@Url.Action("Index", new { brand = selBrand, category = selCategory, staffPage = ViewBag.StaffPage, customerPage = customerPage - 1, productPage = ViewBag.ProductPage })">Prev</a>
+                <a class="btn btn-outline-secondary btn-sm @(customerPage >= customerPages ? "disabled" : "")"
+                   href="@Url.Action("Index", new { brand = selBrand, category = selCategory, staffPage = ViewBag.StaffPage, customerPage = customerPage + 1, productPage = ViewBag.ProductPage })">Next</a>
+            </div>
+        </div>
+    </div>
+
+
+
+  
+    <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h4 class="text-info mb-0"> Products</h4>
+        </div>
+
+       
+        <form method="get" action="@Url.Action("Index", "Home")" class="row g-2 mb-3">
+            <div class="col-md-5">
+                <select name="brand" class="form-select">
+                    <option value="">All Brands</option>
+                    @foreach (var b in ViewBag.Brands)
+                    {
+                        <option value="@b.brand_name" @(b.brand_name == selBrand ? "selected" : "")>@b.brand_name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-5">
+                <select name="category" class="form-select">
+                    <option value="">All Categories</option>
+                    @foreach (var c in ViewBag.Categories)
+                    {
+                        <option value="@c.category_name" @(c.category_name == selCategory ? "selected" : "")>@c.category_name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2 d-grid">
+                <button class="btn btn-dark">Filter</button>
+            </div>
+        </form>
+
+        <div class="row">
+            @foreach (var p in ViewBag.Products as List<BikeStoreApp.Models.product> ?? ViewBag.Products)
+            {
+                var productImages = ViewBag.ProductImages as Dictionary<int, string>;
+                string img = productImages != null && productImages.ContainsKey(p.product_id)
+                            ? productImages[p.product_id]
+                            : Url.Content("~/Bikes_Images/default_bike.jpeg");
+
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100 shadow-sm">
+                        <img src="@img" class="card-img-top" style="height:180px; object-fit:cover;" alt="@p.product_name" />
+                        <div class="card-body text-center">
+                            <h6 class="card-title">@p.product_name</h6>
+                            <p class="text-muted mb-1"><strong>Brand:</strong> @p.brand.brand_name</p>
+                            <p class="text-muted mb-1"><strong>Category:</strong> @p.category.category_name</p>
+                            <p class="fw-bold text-dark">R @p.list_price</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @{
+            int productPage = (int)ViewBag.ProductPage;
+            int productTotal = (int)ViewBag.ProductTotal;
+            int productPages = (int)Math.Ceiling((double)productTotal / pageSize);
+        }
+        <div class="d-flex justify-content-between mb-4">
+            <div>Showing page @productPage of @productPages</div>
+            <div>
+                <a class="btn btn-outline-secondary btn-sm @(productPage <= 1 ? "disabled" : "")"
+                   href="@Url.Action("Index", new { brand = selBrand, category = selCategory, staffPage = ViewBag.StaffPage, customerPage = ViewBag.CustomerPage, productPage = productPage - 1 })">Prev</a>
+                <a class="btn btn-outline-secondary btn-sm @(productPage >= productPages ? "disabled" : "")"
+                   href="@Url.Action("Index", new { brand = selBrand, category = selCategory, staffPage = ViewBag.StaffPage, customerPage = ViewBag.CustomerPage, productPage = productPage + 1 })">Next</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_CreateStaffModal")
+@Html.Partial("_CreateCustomerModal")

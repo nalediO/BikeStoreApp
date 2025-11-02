@@ -1,0 +1,332 @@
+﻿@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var selectedReport = ViewBag.SelectedReportType ?? "sales";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    .report-card {
+        transition: transform 0.2s;
+    }
+    .report-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .chart-container {
+        position: relative;
+        height: 400px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="container-fluid mt-4">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+             @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="text-primary"BikeStores Reports Dashboard</h2>
+            <p class="text-muted">Generate comprehensive business reports with visual analytics</p>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-4 col-md-5">
+            <div class="card shadow-sm mb-3 report-card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Report Generator</h5>
+                </div>
+                <div class="card-body">
+                    
+                    <form method="get" action="@Url.Action("Index")" id="reportForm">
+                        <label for="reportType" class="form-label fw-bold">Select Report Type:</label>
+                        <select name="reportType" id="reportType" class="form-select mb-3" onchange="this.form.submit()">
+                            <option value="sales" @(selectedReport == "sales" ? "selected" : "")> Current Sales Report</option>
+                            <option value="popular" @(selectedReport == "popular" ? "selected" : "")> Popular Products Report</option>
+                            <option value="customer" @(selectedReport == "customer" ? "selected" : "")> Customer Performance Ranking</option>
+                            <option value="stock" @(selectedReport == "stock" ? "selected" : "")> Stock Items Report</option>
+                            <option value="frequency" @(selectedReport == "frequency" ? "selected" : "")> Sales Frequency Report</option>
+                            <option value="staff" @(selectedReport == "staff" ? "selected" : "")>Staff Performance Ranking</option>
+                            <option value="store" @(selectedReport == "store" ? "selected" : "")> Store Performance Ranking</option>
+                        </select>
+                        <noscript>
+                            <button type="submit" class="btn btn-primary w-100 mb-2">Generate Report</button>
+                        </noscript>
+                    </form>
+                    <hr />
+
+                   
+                    <h6 class="text-primary"> Save Report</h6>
+                    <form method="post" action="@Url.Action("SaveReport")" onsubmit="return captureReportHtml()">
+                        <input type="hidden" name="reportHtml" id="reportHtmlInput" />
+                        <input type="hidden" name="currentReport" value="@selectedReport" />
+                        
+                        <div class="mb-2">
+                            <input type="text" name="filename" class="form-control" placeholder="Enter filename (optional)" />
+                            <small class="text-muted">Leave blank for auto-generated name</small>
+                        </div>
+                        <select name="fileType" class="form-select mb-2">
+                            <option value="html">HTML File</option>
+                            <option value="csv">CSV File</option>
+                        </select>
+                        <button type="submit" class="btn btn-success w-100 mb-2">
+                            Save Report
+                        </button>
+                    </form>
+
+                  
+                    <a href="@Url.Action("ExportToPDF", new { type = selectedReport })" class="btn btn-danger w-100" target="_blank">
+                        📄 Download as PDF
+                    </a>
+                </div>
+            </div>
+
+            <div class="card shadow-sm report-card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"> Document Archive</h5>
+                </div>
+                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                    @if (ViewBag.ArchiveFiles != null && ((List<BikeStoreApp.Models.ReportFileViewModel>)ViewBag.ArchiveFiles).Count > 0)
+                    {
+                        var files = (List<BikeStoreApp.Models.ReportFileViewModel>)ViewBag.ArchiveFiles;
+                        <div class="list-group">
+                            @foreach (var file in files)
+                            {
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>@file.Name</strong><br />
+                                        <small class="text-muted">@file.Date | @file.Size</small>
+                                    </div>
+                                    <div>
+                                        <a href="@Url.Action("Download", new { name = file.Name })"
+                                           class="btn btn-sm btn-outline-primary"
+                                           title="Download">Download</a>
+
+                                        <a href="@Url.Action("DeleteFile", new { name = file.Name, currentReport = selectedReport })"
+                                           class="btn btn-sm btn-outline-danger ms-1"
+                                           title="Delete"
+                                           onclick="return confirm('Are you sure you want to delete @file.Name?');">Delete</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info"> No saved reports yet</div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="col-lg-8 col-md-7">
+            <div class="card shadow-sm report-card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">@ViewBag.ReportTitle</h5>
+                </div>
+                <div class="card-body">
+                    
+                    <div class="chart-container">
+                        <canvas id="reportChart"></canvas>
+                    </div>
+
+                 
+                    <div id="reportTable" class="table-responsive mt-3">
+                        @if (ViewBag.ReportData != null)
+                        {
+                            var reportData = (IEnumerable<dynamic>)ViewBag.ReportData;
+                            var firstRow = reportData.FirstOrDefault();
+                            
+                            if (firstRow != null)
+                            {
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            @foreach (var prop in firstRow.GetType().GetProperties())
+                                            {
+                                                <th>@prop.Name</th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var row in reportData)
+                                        {
+                                            <tr>
+                                                @foreach (var prop in row.GetType().GetProperties())
+                                                {
+                                                    var value = prop.GetValue(row, null);
+                                                    <td>
+                                                        @if (value is decimal || value is double)
+                                                        {
+                                                            <text>R @string.Format("{0:N2}", value)</text>
+                                                        }
+                                                        else if (value is int)
+                                                        {
+                                                            @value.ToString()
+                                                        }
+                                                        else
+                                                        {
+                                                            @value
+                                                        }
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning text-center">
+                                    No data available for this report
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-info text-center">
+                                <i class="bi bi-info-circle"></i> Select a report type to view data
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function captureReportHtml() {
+        var reportTable = document.getElementById('reportTable');
+        if (!reportTable) return false;
+        
+        var reportHtml = reportTable.innerHTML;
+        
+      
+        if (!reportHtml || reportHtml.includes("Select a report") || reportHtml.includes("info-circle")) {
+            alert(" Please generate a report first by selecting a report type!");
+            return false;
+        }
+        
+        document.getElementById('reportHtmlInput').value = reportHtml;
+        return true;
+    }
+
+    @if (ViewBag.ChartData != null && ViewBag.ChartType != null)
+    {
+        <text>
+        (function() {
+            var chartType = '@ViewBag.ChartType';
+            var chartData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ChartData));
+            
+            if (!chartData || chartData.length === 0) {
+                console.log('No chart data available');
+                return;
+            }
+            
+            var labels = [];
+            var dataValues = [];
+            var chartTitle = '@ViewBag.ReportTitle';
+            
+            if (chartType === 'bar' || chartType === 'line') {
+                if (chartData[0].Staff) {
+                
+                    labels = chartData.map(function(x) { return x.Staff; });
+                    dataValues = chartData.map(function(x) { return x.TotalSales || x.TotalRevenue || 0; });
+                } else if (chartData[0].Customer) {
+                  
+                    labels = chartData.map(function(x) { return x.Customer; });
+                    dataValues = chartData.map(function(x) { return x.TotalSpent || 0; });
+                } else if (chartData[0].Store && chartData[0].TotalValue !== undefined) {
+                  
+                    labels = chartData.map(function(x) { return x.Store; });
+                    dataValues = chartData.map(function(x) { return x.TotalValue || 0; });
+                } else if (chartData[0].Store && chartData[0].TotalRevenue !== undefined) {
+                  
+                    labels = chartData.map(function(x) { return x.Store; });
+                    dataValues = chartData.map(function(x) { return x.TotalRevenue || 0; });
+                } else if (chartData[0].Period) {
+                   
+                    labels = chartData.map(function(x) { return x.Period; });
+                    dataValues = chartData.map(function(x) { return x.Revenue || 0; });
+                }
+            } else if (chartType === 'pie') {
+               
+                labels = chartData.map(function(x) { 
+                    var label = x.Product || x.Store || '';
+                    return label.length > 20 ? label.substring(0, 20) + '...' : label;
+                });
+                dataValues = chartData.map(function(x) { return x.Quantity || x.TotalValue || 0; });
+            }
+
+      
+            var ctx = document.getElementById('reportChart');
+            if (!ctx) return;
+            
+            ctx = ctx.getContext('2d');
+            
+            var chartColors = [
+                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                '#FF9F40', '#FF6384', '#C9CBCF', '#4BC0C0', '#FF6384'
+            ];
+
+            new Chart(ctx, {
+                type: chartType,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: chartTitle,
+                        data: dataValues,
+                        backgroundColor: chartType === 'pie' ? chartColors : 'rgba(54, 162, 235, 0.7)',
+                        borderColor: chartType === 'pie' ? '#fff' : 'rgba(54, 162, 235, 1)',
+                        borderWidth: chartType === 'pie' ? 2 : 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { 
+                            display: true, 
+                            text: chartTitle, 
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        legend: { 
+                            display: true, 
+                            position: chartType === 'pie' ? 'right' : 'top' 
+                        }
+                    },
+                    scales: chartType !== 'pie' ? {
+                        y: { 
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R ' + value.toFixed(0);
+                                }
+                            }
+                        }
+                    } : {}
+                }
+            });
+        })();
+        </text>
+    }
+</script>

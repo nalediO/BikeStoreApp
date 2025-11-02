@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "_EditProductModal";
+
+    // Safely handle null ViewBag values
+    var brands = ViewBag.Brands as IEnumerable<BikeStoreApp.Models.brand> ?? new List<BikeStoreApp.Models.brand>();
+    var categories = ViewBag.Categories as IEnumerable<BikeStoreApp.Models.category> ?? new List<BikeStoreApp.Models.category>();
+}
+
+<!-- Edit Product Modal -->
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="editProductLabel">⚙️ Edit Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form method="post" action="@Url.Action("EditProduct", "Home")">
+                <div class="modal-body">
+                    <!-- Hidden ID -->
+                    <input type="hidden" name="product_id" id="product_id" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Product Name</label>
+                        <input type="text" name="product_name" id="product_name" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Model Year</label>
+                        <input type="number" name="model_year" id="model_year" class="form-control" min="2000" max="2025" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">List Price (R)</label>
+                        <input type="number" name="list_price" id="list_price" class="form-control" step="0.01" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Brand</label>
+                        <select name="brand_id" id="brand_id" class="form-select" required>
+                            <option value="">Select Brand</option>
+                            @foreach (var b in brands)
+                            {
+                                <option value="@b.brand_id">@b.brand_name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select name="category_id" id="category_id" class="form-select" required>
+                            <option value="">Select Category</option>
+                            @foreach (var c in categories)
+                            {
+                                <option value="@c.category_id">@c.category_name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-info text-white">💾 Save Changes</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "_CreateCustomerModel";
+}
+
+<div class="modal fade" id="createCustomerModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Add New Customer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "Customers", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group mb-2">
+                        @Html.Label("First Name")
+                        @Html.TextBox("first_name", null, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group mb-2">
+                        @Html.Label("Last Name")
+                        @Html.TextBox("last_name", null, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group mb-2">
+                        @Html.Label("Email")
+                        @Html.TextBox("email", null, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group mb-2">
+                        @Html.Label("Phone")
+                        @Html.TextBox("phone", null, new { @class = "form-control" })
+                    </div>
+                    <button type="submit" class="btn btn-success mt-2">Save</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
