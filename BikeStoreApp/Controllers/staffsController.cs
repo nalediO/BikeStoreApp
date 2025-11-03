@@ -104,12 +104,24 @@ namespace BikeStoreApp.Controllers
             }
             return View(staff);
         }
-
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            staff staff = await db.staffs.FindAsync(id);
+            var staff = await db.staffs.FindAsync(id);
+            if (staff == null)
+            {
+                return HttpNotFound();
+            }
+            var subordinates = db.staffs.Where(s => s.manager_id == id).ToList();
+
+            if (subordinates.Any())
+            {
+                TempData["ErrorMessage"] = "This staff member cannot be deleted because they manage other employees. Reassign or remove their subordinates first.";
+                return RedirectToAction("Index");
+
+            }
+
             db.staffs.Remove(staff);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

@@ -1,12 +1,12 @@
 ﻿@{
     ViewBag.Title = "_EditProductModal";
 
-    // Safely handle null ViewBag values
+  
     var brands = ViewBag.Brands as IEnumerable<BikeStoreApp.Models.brand> ?? new List<BikeStoreApp.Models.brand>();
     var categories = ViewBag.Categories as IEnumerable<BikeStoreApp.Models.category> ?? new List<BikeStoreApp.Models.category>();
 }
 
-<!-- Edit Product Modal -->
+
 <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -18,7 +18,7 @@
 
             <form method="post" action="@Url.Action("EditProduct", "Home")">
                 <div class="modal-body">
-                    <!-- Hidden ID -->
+                    
                     <input type="hidden" name="product_id" id="product_id" />
 
                     <div class="mb-3">

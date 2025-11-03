@@ -1,58 +1,33 @@
 ﻿@model BikeStoreApp.Models.product
-
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Product Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+<div class="container mt-4">
+    <div class="card shadow-sm p-4">
+        <h2 class="text-primary mb-3">Product Details</h2>
 
-<div>
-    <h4>product</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.product_name)
-        </dt>
+        <dl class="row">
+            <dt class="col-sm-3">Product Name</dt>
+            <dd class="col-sm-9">@Model.product_name</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.product_name)
-        </dd>
+            <dt class="col-sm-3">Model Year</dt>
+            <dd class="col-sm-9">@Model.model_year</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.model_year)
-        </dt>
+            <dt class="col-sm-3">List Price</dt>
+            <dd class="col-sm-9">R @Model.list_price.ToString("N2")</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.model_year)
-        </dd>
+            <dt class="col-sm-3">Brand</dt>
+            <dd class="col-sm-9">@Model.brand?.brand_name</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.list_price)
-        </dt>
+            <dt class="col-sm-3">Category</dt>
+            <dd class="col-sm-9">@Model.category?.category_name</dd>
+        </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.list_price)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.brand.brand_name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.brand.brand_name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.category.category_name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.category.category_name)
-        </dd>
-
-    </dl>
+        <div class="mt-4 text-end">
+            @Html.ActionLink("Edit", "Edit", new { id = Model.product_id }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary ms-2" })
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.product_id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

@@ -1,82 +1,42 @@
 ﻿@model BikeStoreApp.Models.customer
-
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Customer Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+<div class="container mt-4">
+    <div class="card shadow-sm p-4">
+        <h2 class="text-primary mb-3">Customer Details</h2>
 
-<div>
-    <h4>customer</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.first_name)
-        </dt>
+        <dl class="row">
+            <dt class="col-sm-3">First Name</dt>
+            <dd class="col-sm-9">@Model.first_name</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.first_name)
-        </dd>
+            <dt class="col-sm-3">Last Name</dt>
+            <dd class="col-sm-9">@Model.last_name</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.last_name)
-        </dt>
+            <dt class="col-sm-3">Phone</dt>
+            <dd class="col-sm-9">@Model.phone</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.last_name)
-        </dd>
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@Model.email</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.phone)
-        </dt>
+            <dt class="col-sm-3">Street</dt>
+            <dd class="col-sm-9">@Model.street</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.phone)
-        </dd>
+            <dt class="col-sm-3">City</dt>
+            <dd class="col-sm-9">@Model.city</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.email)
-        </dt>
+            <dt class="col-sm-3">State</dt>
+            <dd class="col-sm-9">@Model.state</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.email)
-        </dd>
+            <dt class="col-sm-3">ZIP Code</dt>
+            <dd class="col-sm-9">@Model.zip_code</dd>
+        </dl>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.street)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.street)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.city)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.city)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.state)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.state)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.zip_code)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.zip_code)
-        </dd>
-
-    </dl>
+        <div class="text-end mt-4">
+            @Html.ActionLink("Edit", "Edit", new { id = Model.customer_id }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary ms-2" })
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.customer_id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

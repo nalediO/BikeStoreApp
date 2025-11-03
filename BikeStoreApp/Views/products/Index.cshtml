@@ -1,57 +1,47 @@
 ﻿@model IEnumerable<BikeStoreApp.Models.product>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Products";
 }
 
-<h2>Index</h2>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary fw-bold">Product List</h2>
+        @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success" })
+    </div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.product_name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.model_year)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.list_price)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.brand.brand_name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.category.category_name)
-        </th>
-        <th></th>
-    </tr>
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-striped table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.product_name)</th>
+                        <th>@Html.DisplayNameFor(model => model.model_year)</th>
+                        <th>@Html.DisplayNameFor(model => model.list_price)</th>
+                        <th>@Html.DisplayNameFor(model => model.brand.brand_name)</th>
+                        <th>@Html.DisplayNameFor(model => model.category.category_name)</th>
+                        <th class="text-center" style="width: 200px;">Actions</th>
+                    </tr>
+                </thead>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.product_name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.model_year)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.list_price)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.brand.brand_name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.category.category_name)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.product_id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.product_id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.product_id })
-        </td>
-    </tr>
-}
-
-</table>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.product_name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.model_year)</td>
+                            <td>@Html.DisplayFor(modelItem => item.list_price)</td>
+                            <td>@Html.DisplayFor(modelItem => item.brand.brand_name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.category.category_name)</td>
+                            <td class="text-center">
+                                @Html.ActionLink("Edit", "Edit", new { id = item.product_id }, new { @class = "btn btn-sm btn-warning me-1" })
+                                @Html.ActionLink("Details", "Details", new { id = item.product_id }, new { @class = "btn btn-sm btn-info me-1 text-white" })
+                                @Html.ActionLink("Delete", "Delete", new { id = item.product_id }, new { @class = "btn btn-sm btn-danger" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

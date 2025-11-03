@@ -1,80 +1,36 @@
 ﻿@model BikeStoreApp.Models.staff
-
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Delete Staff";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Delete</h2>
+<div class="container mt-5">
+    <div class="card border-danger shadow-sm p-4">
+        <h2 class="text-danger"> Delete Staff</h2>
+        <p class="text-muted">Are you sure you want to delete this staff member?</p>
+        <hr />
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>staff</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.first_name)
-        </dt>
+        <dl class="row">
+            <dt class="col-sm-3">Name</dt>
+            <dd class="col-sm-9">@Model.first_name @Model.last_name</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.first_name)
-        </dd>
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@Model.email</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.last_name)
-        </dt>
+            <dt class="col-sm-3">Phone</dt>
+            <dd class="col-sm-9">@Model.phone</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.last_name)
-        </dd>
+            <dt class="col-sm-3">Store</dt>
+            <dd class="col-sm-9">@Model.store?.store_name</dd>
+        </dl>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.email)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.email)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.phone)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.phone)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.active)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.active)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.staff1.first_name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.staff1.first_name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.store.store_name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.store.store_name)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
-    }
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="d-flex justify-content-end mt-4">
+                <input type="submit" value=" Confirm Delete" class="btn btn-danger me-2" />
+                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-secondary" })
+            </div>
+        }
+    </div>
 </div>

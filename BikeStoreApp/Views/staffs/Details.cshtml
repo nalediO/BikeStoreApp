@@ -1,74 +1,47 @@
 ﻿@model BikeStoreApp.Models.staff
-
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Staff Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+<div class="container mt-4">
+    <div class="card shadow-sm p-4">
+        <h2 class="text-primary mb-3">Staff Details</h2>
+        <dl class="row">
+            <dt class="col-sm-3">First Name</dt>
+            <dd class="col-sm-9">@Model.first_name</dd>
 
-<div>
-    <h4>staff</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.first_name)
-        </dt>
+            <dt class="col-sm-3">Last Name</dt>
+            <dd class="col-sm-9">@Model.last_name</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.first_name)
-        </dd>
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@Model.email</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.last_name)
-        </dt>
+            <dt class="col-sm-3">Phone</dt>
+            <dd class="col-sm-9">@Model.phone</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.last_name)
-        </dd>
+            <dt class="col-sm-3">Status</dt>
+            <dd class="col-sm-9">
+                @if (Model.active == 1)
+                {
+                    <span class="badge bg-success">Active</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Inactive</span>
+                }
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.email)
-        </dt>
+            <dt class="col-sm-3">Manager</dt>
+            <dd class="col-sm-9">@Model.staff1?.first_name</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.email)
-        </dd>
+            <dt class="col-sm-3">Store</dt>
+            <dd class="col-sm-9">@Model.store?.store_name</dd>
+        </dl>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.phone)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.phone)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.active)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.active)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.staff1.first_name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.staff1.first_name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.store.store_name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.store.store_name)
-        </dd>
-
-    </dl>
+        <div class="mt-3 text-end">
+            @Html.ActionLink(" Edit", "Edit", new { id = Model.staff_id }, new { @class = "btn btn-primary" })
+            @Html.ActionLink(" Back to List", "Index", null, new { @class = "btn btn-secondary ms-2" })
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.staff_id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
